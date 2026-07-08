@@ -1,0 +1,26 @@
+name: Feature request
+description: Propose a Qortek capability
+title: "feat: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What capability is missing?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the implementation boundary and public/private impact.
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundary
+    attributes:
+      label: Boundary
+      options:
+        - label: This does not require private qortex code.
+        - label: This can be documented honestly as implemented or planned.
