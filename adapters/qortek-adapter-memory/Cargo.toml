@@ -12,3 +12,6 @@ async-trait.workspace = true
 qortek-core.workspace = true
 qortek-rro.workspace = true
 qortek-store.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true
