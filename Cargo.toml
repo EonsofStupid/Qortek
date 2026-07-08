@@ -1,0 +1,42 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/qortek-core",
+  "crates/qortek-rro",
+  "crates/qortek-store",
+  "crates/qortek-vector",
+  "crates/qortek-fork",
+  "crates/qortek-mesh",
+  "crates/qortek-preflight",
+  "crates/qortek-rrd",
+  "adapters/qortek-adapter-memory",
+  "adapters/qortek-adapter-qdrant",
+  "adapters/qortek-adapter-surreal",
+  "examples/basic-rro",
+  "examples/fork-foldback",
+]
+
+[workspace.package]
+version = "0.1.0-alpha.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/EonsofStupid/Qortek"
+authors = ["Qortek contributors"]
+
+[workspace.dependencies]
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync"] }
+uuid = { version = "1", features = ["serde", "v4"] }
+
+qortek-core = { path = "crates/qortek-core" }
+qortek-rro = { path = "crates/qortek-rro" }
+qortek-store = { path = "crates/qortek-store" }
+qortek-vector = { path = "crates/qortek-vector" }
+qortek-fork = { path = "crates/qortek-fork" }
+qortek-mesh = { path = "crates/qortek-mesh" }
+qortek-preflight = { path = "crates/qortek-preflight" }
