@@ -47,7 +47,10 @@ where
         self.brain.init_project(scope).await
     }
 
-    pub async fn ingest_memory(&self, request: ConnectomeIngestRequest) -> Result<ConnectomeIngestReport> {
+    pub async fn ingest_memory(
+        &self,
+        request: ConnectomeIngestRequest,
+    ) -> Result<ConnectomeIngestReport> {
         let seed = ReasonReadyObject::new(
             request.scope.workspace_id,
             RroKind::Memory,
@@ -63,7 +66,7 @@ where
         );
         let memory_id = memory.id;
 
-        self.brain.save_memory(&request.scope, memory.clone()).await?;
+        self.brain.save_memory(&request.scope, memory).await?;
         self.brain
             .record_alignment(AlignmentJournalEntry::new(
                 source_rro,
@@ -144,7 +147,11 @@ where
             .await
     }
 
-    async fn resolve_hits(&self, scope: &ProjectScope, hits: Vec<VectorHit>) -> Result<Vec<ResolvedRecall>> {
+    async fn resolve_hits(
+        &self,
+        scope: &ProjectScope,
+        hits: Vec<VectorHit>,
+    ) -> Result<Vec<ResolvedRecall>> {
         let mut resolved = Vec::with_capacity(hits.len());
 
         for hit in hits {
@@ -240,6 +247,7 @@ pub enum IntentKind {
     Unknown,
 }
 
+#[must_use]
 pub fn recall_hit_to_brain_hit(hit: &ResolvedRecall) -> RecallHit {
     RecallHit {
         record: hit.memory.clone(),
@@ -264,7 +272,10 @@ mod tests {
     #[async_trait]
     impl TotalRecall for InMemoryTotalRecall {
         async fn upsert_vectors(&self, batch: VectorBatch) -> Result<Vec<VectorId>> {
-            let mut docs = self.docs.write().map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
+            let mut docs = self
+                .docs
+                .write()
+                .map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
             let ids = batch.documents.iter().map(|doc| doc.id).collect::<Vec<_>>();
             for doc in batch.documents {
                 docs.insert(doc.id, doc);
@@ -273,7 +284,10 @@ mod tests {
         }
 
         async fn search_dense(&self, query: DenseQuery) -> Result<Vec<VectorHit>> {
-            let docs = self.docs.read().map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
+            let docs = self
+                .docs
+                .read()
+                .map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
             let mut hits = docs
                 .values()
                 .filter_map(|doc| {
@@ -286,27 +300,39 @@ mod tests {
                     })
                 })
                 .collect::<Vec<_>>();
-            hits.sort_by(|left, right| right.score.partial_cmp(&left.score).unwrap_or(Ordering::Equal));
+            hits.sort_by(|left, right| {
+                right
+                    .score
+                    .partial_cmp(&left.score)
+                    .unwrap_or(Ordering::Equal)
+            });
             hits.truncate(query.limit);
             Ok(hits)
         }
 
-        async fn search_hybrid(&self, query: qortek_vector::HybridQuery) -> Result<Vec<VectorHit>> {
+        async fn search_hybrid(
+            &self,
+            query: qortek_vector::HybridQuery,
+        ) -> Result<Vec<VectorHit>> {
             match query.vector {
-                Some(vector) => self
-                    .search_dense(DenseQuery {
+                Some(vector) => {
+                    self.search_dense(DenseQuery {
                         collection: query.collection,
                         scope: query.scope,
                         vector,
                         limit: query.limit,
                     })
-                    .await,
+                    .await
+                }
                 None => Ok(Vec::new()),
             }
         }
 
         async fn mark_deleted(&self, id: VectorId) -> Result<()> {
-            let mut docs = self.docs.write().map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
+            let mut docs = self
+                .docs
+                .write()
+                .map_err(|_| QortekError::InvalidState("recall lock poisoned".into()))?;
             docs.remove(&id);
             Ok(())
         }
@@ -316,9 +342,9 @@ mod tests {
         if left.is_empty() || left.len() != right.len() {
             return None;
         }
-        let mut dot = 0.0;
-        let mut left_norm = 0.0;
-        let mut right_norm = 0.0;
+        let mut dot = 0.0_f32;
+        let mut left_norm = 0.0_f32;
+        let mut right_norm = 0.0_f32;
         for (l, r) in left.iter().zip(right.iter()) {
             dot += l * r;
             left_norm += l * l;
@@ -345,7 +371,8 @@ mod tests {
             .ingest_memory(ConnectomeIngestRequest {
                 scope: scope.clone(),
                 seed_text: "TotalRecall indexes derived vectors.".to_string(),
-                memory_text: "Connectome owns meaning; TotalRecall owns fast derived recall.".to_string(),
+                memory_text: "Connectome owns meaning; TotalRecall owns fast derived recall."
+                    .to_string(),
                 embedding: vec![1.0, 0.0, 0.0, 0.0],
                 sparse_terms: vec!["connectome".to_string(), "totalrecall".to_string()],
                 kind: MemoryKind::Decision,
@@ -357,7 +384,7 @@ mod tests {
 
         let results = connectome
             .recall(ConnectomeRecallRequest {
-                scope: scope.clone(),
+                scope,
                 embedding: vec![1.0, 0.0, 0.0, 0.0],
                 limit: 4,
             })
