@@ -1,0 +1,14 @@
+[package]
+name = "qortek-adapter-memory"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+qortek-core.workspace = true
+qortek-rro.workspace = true
+qortek-store.workspace = true
