@@ -8,6 +8,7 @@ members = [
   "crates/qortek-fork",
   "crates/qortek-mesh",
   "crates/qortek-preflight",
+  "crates/qortek-estate",
   "crates/qortek-rrd",
   "adapters/qortek-adapter-memory",
   "adapters/qortek-adapter-qdrant",
@@ -41,4 +42,5 @@ qortek-vector = { path = "crates/qortek-vector" }
 qortek-fork = { path = "crates/qortek-fork" }
 qortek-mesh = { path = "crates/qortek-mesh" }
 qortek-preflight = { path = "crates/qortek-preflight" }
+qortek-estate = { path = "crates/qortek-estate" }
 qortek-adapter-memory = { path = "adapters/qortek-adapter-memory" }
