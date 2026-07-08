@@ -1,6 +1,7 @@
 name: ci
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
   pull_request:
@@ -29,3 +30,6 @@ jobs:
 
       - name: Test
         run: cargo test --workspace
+
+      - name: Replay memory moat
+        run: cargo run -p replay-memory-moat
