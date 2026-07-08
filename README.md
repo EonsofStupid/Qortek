@@ -35,6 +35,7 @@ RRD                 = orchestration layer that keeps both aligned
 - `qortex` remains private while the embedded vector engine and release path are finalized.
 - Qortek must remain usable without private qortex code.
 - Public adapters may support upstream engines first, with private accelerated adapters layered later.
+- Private trees are not pulled into this repo unless a specific file/path is explicitly approved.
 
 ## Workspace layout
 
@@ -72,6 +73,21 @@ Prompt starts
 → foldback collapses branch result into seed context
 → memory candidate becomes durable
 ```
+
+## Architecture docs
+
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- [`docs/BRAIN_STORE.md`](docs/BRAIN_STORE.md)
+- [`docs/CONNECTOME.md`](docs/CONNECTOME.md)
+- [`docs/DEDICATED_RECALL_SERVICE.md`](docs/DEDICATED_RECALL_SERVICE.md)
+- [`docs/FORK_DELIBERATE_COMMIT.md`](docs/FORK_DELIBERATE_COMMIT.md)
+- [`docs/MESH.md`](docs/MESH.md)
+- [`docs/PROTOCOL_STRATEGY.md`](docs/PROTOCOL_STRATEGY.md)
+- [`docs/PUBLIC_BOUNDARY.md`](docs/PUBLIC_BOUNDARY.md)
+- [`docs/QORTEX_ALIGNMENT.md`](docs/QORTEX_ALIGNMENT.md)
+- [`docs/RRO.md`](docs/RRO.md)
+- [`docs/ROADMAP.md`](docs/ROADMAP.md)
+- [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md)
 
 ## Build
 
