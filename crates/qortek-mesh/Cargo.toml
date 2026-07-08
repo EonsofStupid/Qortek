@@ -11,3 +11,4 @@ authors.workspace = true
 async-trait.workspace = true
 qortek-core.workspace = true
 serde.workspace = true
+serde_json.workspace = true
