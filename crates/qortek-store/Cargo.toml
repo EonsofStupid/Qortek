@@ -13,3 +13,4 @@ chrono.workspace = true
 qortek-core.workspace = true
 qortek-rro.workspace = true
 serde.workspace = true
+serde_json.workspace = true
