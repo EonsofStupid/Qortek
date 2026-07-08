@@ -14,6 +14,7 @@ members = [
   "adapters/qortek-adapter-surreal",
   "examples/basic-rro",
   "examples/fork-foldback",
+  "examples/replay-memory-moat",
 ]
 
 [workspace.package]
@@ -40,3 +41,4 @@ qortek-vector = { path = "crates/qortek-vector" }
 qortek-fork = { path = "crates/qortek-fork" }
 qortek-mesh = { path = "crates/qortek-mesh" }
 qortek-preflight = { path = "crates/qortek-preflight" }
+qortek-adapter-memory = { path = "adapters/qortek-adapter-memory" }
