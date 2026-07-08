@@ -5,6 +5,7 @@ members = [
   "crates/qortek-rro",
   "crates/qortek-store",
   "crates/qortek-vector",
+  "crates/qortek-connectome",
   "crates/qortek-fork",
   "crates/qortek-mesh",
   "crates/qortek-preflight",
@@ -39,6 +40,7 @@ qortek-core = { path = "crates/qortek-core" }
 qortek-rro = { path = "crates/qortek-rro" }
 qortek-store = { path = "crates/qortek-store" }
 qortek-vector = { path = "crates/qortek-vector" }
+qortek-connectome = { path = "crates/qortek-connectome" }
 qortek-fork = { path = "crates/qortek-fork" }
 qortek-mesh = { path = "crates/qortek-mesh" }
 qortek-preflight = { path = "crates/qortek-preflight" }
