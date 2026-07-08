@@ -159,7 +159,11 @@ impl McpManifest {
                 "target".to_string(),
             ],
             tools: Vec::new(),
-            context_sources: vec!["files".to_string(), "history".to_string(), "replays".to_string()],
+            context_sources: vec![
+                "files".to_string(),
+                "history".to_string(),
+                "replays".to_string(),
+            ],
         }
     }
 }
@@ -238,9 +242,10 @@ pub struct EstatePreflightReport {
 impl EstatePreflightReport {
     #[must_use]
     pub fn from_manifests(estate: &EstateManifest, endpoint: &EndpointManifest) -> Self {
-        let mut checks = Vec::new();
-        checks.push(PreflightCheck::pass("estate manifest loaded"));
-        checks.push(PreflightCheck::pass("endpoint manifest loaded"));
+        let mut checks = vec![
+            PreflightCheck::pass("estate manifest loaded"),
+            PreflightCheck::pass("endpoint manifest loaded"),
+        ];
 
         if estate.estate_id == endpoint.estate_id {
             checks.push(PreflightCheck::pass("estate id matches endpoint"));
@@ -260,7 +265,10 @@ impl EstatePreflightReport {
             checks.push(PreflightCheck::pass("capabilities advertised"));
         }
 
-        let decision = if checks.iter().any(|check| check.decision == PreflightDecision::Deny) {
+        let decision = if checks
+            .iter()
+            .any(|check| check.decision == PreflightDecision::Deny)
+        {
             PreflightDecision::Deny
         } else if checks
             .iter()
@@ -349,33 +357,32 @@ impl EstateKit {
     }
 
     pub fn render_files(&self) -> Result<Vec<EstateKitFile>> {
-        let mut files = Vec::new();
-        files.push(EstateKitFile {
-            path: ESTATE_MANIFEST.to_string(),
-            content: serde_json::to_string_pretty(&self.estate)
-                .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
-        });
-        files.push(EstateKitFile {
-            path: ENDPOINT_MANIFEST.to_string(),
-            content: serde_json::to_string_pretty(&self.endpoint)
-                .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
-        });
-        files.push(EstateKitFile {
-            path: MCP_MANIFEST.to_string(),
-            content: serde_json::to_string_pretty(&self.mcp)
-                .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
-        });
-        files.push(EstateKitFile {
-            path: LAST_TOUCHED_LEDGER.to_string(),
-            content: String::new(),
-        });
-
-        for domain in EstateDomain::standard() {
-            files.push(EstateKitFile {
-                path: format!("{ESTATE_ROOT}/{}/.keep", domain.folder()),
+        let mut files = vec![
+            EstateKitFile {
+                path: ESTATE_MANIFEST.to_string(),
+                content: serde_json::to_string_pretty(&self.estate)
+                    .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
+            },
+            EstateKitFile {
+                path: ENDPOINT_MANIFEST.to_string(),
+                content: serde_json::to_string_pretty(&self.endpoint)
+                    .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
+            },
+            EstateKitFile {
+                path: MCP_MANIFEST.to_string(),
+                content: serde_json::to_string_pretty(&self.mcp)
+                    .map_err(|err| qortek_core::QortekError::Serialization(err.to_string()))?,
+            },
+            EstateKitFile {
+                path: LAST_TOUCHED_LEDGER.to_string(),
                 content: String::new(),
-            });
-        }
+            },
+        ];
+
+        files.extend(EstateDomain::standard().into_iter().map(|domain| EstateKitFile {
+            path: format!("{ESTATE_ROOT}/{}/.keep", domain.folder()),
+            content: String::new(),
+        }));
 
         Ok(files)
     }
